@@ -42,15 +42,30 @@ fn key_value_parser(arg: &str) -> Result<(String, String)> {
 /// Adds attributes to a GFF file
 #[derive(Debug, Args)]
 pub struct AddCommand {
+    /// Attributes and value in the form attr:value
+    /// 
+    /// if the keys are duplicated, the value from the last one
+    /// is used
+    /// This can be passed multiple times, either by
+    /// the option multiple times or passing multiple
+    /// values separated by commas. These are equivalent:
+    /// -a attr1:value -a attr2:value <-> -a attr1:value,attr2:value
     #[arg(short, long, value_parser = key_value_parser, required = true, value_delimiter = ',')]
     attributes: Vec<(String, String)>,
+    /// If an attribute is already present overwrite its value
     #[arg(short, long)]
     overwrite: bool,
+    /// Only print changed annotations (only used with `-u`)
     #[arg(short = 'c', long)]
     only_changed: bool,
+    /// Only changes annotations with uids contained in the file
+    /// 
+    /// One uid per line
     #[arg(short, long)]
     uid_file: Option<PathBuf>,
+    /// Input file, without value the stdin is used
     input_file: Option<PathBuf>,
+    /// Output file, without value the stdout is used
     output_file: Option<PathBuf>,
 }
 
