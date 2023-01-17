@@ -55,9 +55,6 @@ pub struct AddCommand {
     /// If an attribute is already present overwrite its value
     #[arg(short, long)]
     overwrite: bool,
-    /// Only print changed annotations (only used with `-u`)
-    #[arg(short = 'c', long)]
-    only_changed: bool,
     /// Only changes annotations with uids contained in the file
     /// 
     /// One uid per line
