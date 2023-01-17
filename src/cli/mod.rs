@@ -69,8 +69,10 @@ pub struct AddCommand {
 /// Scans a GFF file to list the attributes contained
 #[derive(Debug, Args)]
 pub struct FieldsCommand {
+    /// Number of lines to read, before printing
     #[arg(short, long, default_value_t = 100, value_parser = clap::value_parser!(u16).range(1..))]
     num_ann: u16,
+    /// Input file, without value the stdin is used
     input_file: Option<PathBuf>,
 }
 
