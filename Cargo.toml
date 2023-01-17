@@ -10,3 +10,11 @@ anyhow = "1.0.68"
 bio_rascal = {path = "../bio-rascal"}
 clap = { version = "4.1.1", features = ["derive"] }
 clap_complete = "4.1.0"
+env_logger = "0.10.0"
+indicatif = "0.17.3"
+log = "0.4.17"
+
+[profile.release]
+strip = true
+lto = true
+codegen-units = 1

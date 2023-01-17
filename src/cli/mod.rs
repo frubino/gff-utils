@@ -1,7 +1,7 @@
 pub mod add;
 
 use anyhow::{bail, Result};
-use clap::{Args, Command, Parser, Subcommand, ValueEnum};
+use clap::{Args, Command, Parser, Subcommand};
 use clap_complete::{generate, Generator, Shell};
 use std::path::PathBuf;
 
@@ -59,7 +59,7 @@ pub struct AddCommand {
 pub struct FieldsCommand {
     #[arg(short, long, default_value_t = 100, value_parser = clap::value_parser!(u16).range(1..))]
     num_ann: u16,
-    input_file: Option<PathBuf>
+    input_file: Option<PathBuf>,
 }
 
 #[derive(Debug, Args)]
@@ -109,9 +109,8 @@ pub struct TableCommand {
     output_file: Option<PathBuf>,
 }
 
-
 /// Generates the completion for the specified shell
-/// 
+///
 /// Slightly modified from example
 pub fn print_completions<G: Generator>(gen: G, cmd: &mut Command) {
     generate(gen, cmd, cmd.get_name().to_string(), &mut std::io::stdout());
