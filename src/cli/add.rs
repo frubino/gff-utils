@@ -14,10 +14,9 @@ pub fn add_command(options: &AddCommand) -> Result<()> {
         HashMap::from_iter(options.attributes.iter().cloned());
     info!("Adding {} attributes", attributes.len());
 
-    let reader = GffReader::from_reader(input_file);
+    let mut reader = GffReader::from_reader(input_file);
 
-    for line in reader {
-        let mut annotation = line.clone();
+    while let Some(mut annotation) = reader.next() {
         for (key, value) in attributes.iter() {
             annotation.attributes.insert(key.clone(), value.clone());
         }
