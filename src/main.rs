@@ -7,6 +7,7 @@ use cli::add::add_command;
 use cli::fields::fields_command;
 use cli::remove::remove_command;
 use cli::*;
+use cli::view::view_command;
 use env_logger::Env;
 
 fn main() -> Result<()> {
@@ -26,6 +27,7 @@ fn main() -> Result<()> {
             cli::Commands::Add(options) => add_command(&options),
             cli::Commands::Fields(options) => fields_command(&options),
             cli::Commands::Rm(options) => remove_command(&options),
+            cli::Commands::View(options) => view_command(&options),
             _ => todo!(),
         };
 

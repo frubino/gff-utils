@@ -10,7 +10,6 @@ pub fn fields_command(options: &FieldsCommand) -> Result<()> {
     let input_file = file_or_stdin(&options.input_file)?;
 
     let mut fields: HashSet<String> = HashSet::new();
-    fields.insert("uid".into());
     fields.insert("seq_id".into());
     fields.insert("source".into());
     fields.insert("feature_type".into());

@@ -1,6 +1,7 @@
 pub mod add;
 pub mod fields;
 pub mod remove;
+pub mod view;
 
 use anyhow::{bail, Result};
 use clap::{Args, Command, Parser, Subcommand};
@@ -84,7 +85,7 @@ pub struct RmCommand {
     /// Attributes to remove
     ///
     /// Multiple attributes can be passed, by using the option multiple times
-    /// or separating them by `,` commas
+    /// or separating them by commas `,`
     #[arg(short, long, required = true, value_delimiter = ',')]
     attributes: Vec<String>,
     /// Use a file with UIDs to limit the removal to specific annotations
@@ -98,18 +99,26 @@ pub struct RmCommand {
     output_file: Option<PathBuf>,
 }
 
+/// Views a GFF as a table, using the fields requested
+/// 
+/// The table is `tab` separated and the order of the columns
+/// is the same as the attributes requested.
 #[derive(Debug, Args)]
 pub struct ViewCommand {
-    /// Prints header (only Text file)
+    /// Prints header
+    /// 
+    /// Line starts with `#` and includes all attributes requested
     #[arg(short = 'e', long)]
     header: bool,
-    /// Keeps annotations where not all attributes were found
-    #[arg(short, long)]
-    keep_empty: bool,
     /// Attributes to print
+    /// 
+    /// Multiple attributes can be passed, by using the option multiple times
+    /// or separating them by commas `,`
     #[arg(short, long, required = true, value_delimiter = ',')]
     attributes: Vec<String>,
+    /// Input file, without value the stdin is used
     input_file: Option<PathBuf>,
+    /// Output file, without value the stdout is used
     output_file: Option<PathBuf>,
 }
 
