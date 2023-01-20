@@ -1,8 +1,8 @@
 pub mod add;
 pub mod fields;
 pub mod remove;
-pub mod view;
 pub mod table;
+pub mod view;
 
 use anyhow::{bail, Result};
 use clap::{Args, Command, Parser, Subcommand};
@@ -125,7 +125,7 @@ pub struct ViewCommand {
 }
 
 /// Adds attributes to a GFF using a file containing a table
-/// 
+///
 /// The table needs to include the key to decide which annotations
 /// to modify as the first column, be tab separated and values
 /// to modify in each column must correspond to the order the
@@ -133,12 +133,12 @@ pub struct ViewCommand {
 #[derive(Debug, Args)]
 pub struct TableCommand {
     /// Attribute in a GFF file to modify it
-    /// 
+    ///
     /// Corresponds to the first column in the table
     #[arg(short, long, default_value = "uid")]
     key: Option<String>,
     /// Attributes, one per each column
-    /// 
+    ///
     /// Corresponds to column 2 onwards in the table
     #[arg(short, long, required = true)]
     attributes: Vec<String>,
@@ -146,17 +146,17 @@ pub struct TableCommand {
     #[arg(short, long)]
     only_edited: bool,
     /// Skips lines starting with this character
-    /// 
+    ///
     /// By default, lines starting with `#` in the table are skipped
     #[arg(short, long, default_value = "#")]
     comment_char: String,
     /// File with table of changes
-    /// 
+    ///
     /// TODO: a few more notes
     #[arg(short, long, required = true)]
     table_file: PathBuf,
     /// Use a key compatible with Prodigal sequence files
-    /// 
+    ///
     /// The file must contain one column for the key and one for each
     /// attribute to modify. Additional columns will be ignored
     /// TODO: example
