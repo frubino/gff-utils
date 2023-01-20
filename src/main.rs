@@ -4,8 +4,9 @@ mod utils;
 use anyhow::{Ok, Result};
 use clap::{CommandFactory, Parser}; // CommandFactory is necessary for Cli::command()
 use cli::add::add_command;
+use cli::fields::fields_command;
 use cli::*;
-use env_logger::{Builder, Env};
+use env_logger::Env;
 
 fn main() -> Result<()> {
     let cli = Cli::parse();
@@ -22,6 +23,7 @@ fn main() -> Result<()> {
 
         let result = match command {
             cli::Commands::Add(options) => add_command(&options),
+            cli::Commands::Fields(options) => fields_command(&options),
             _ => todo!(),
         };
 

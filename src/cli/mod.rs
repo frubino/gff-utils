@@ -1,4 +1,5 @@
 pub mod add;
+pub mod fields;
 
 use anyhow::{bail, Result};
 use clap::{Args, Command, Parser, Subcommand};
