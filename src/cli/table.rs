@@ -36,8 +36,7 @@ fn read_table<P: AsRef<Path>, C: AsRef<str>>(
 
         let fields: Vec<String> = line
             .split('\t')
-            .map(|s| String::from_str(s).ok())
-            .flatten()
+            .filter_map(|s| String::from_str(s).ok())
             .collect();
         // checks that enough columns are present
         if fields.len() < n_fields {
@@ -47,10 +46,7 @@ fn read_table<P: AsRef<Path>, C: AsRef<str>>(
                 fields.len()
             )
         }
-        value_table.insert(
-            fields[0].clone(),
-            fields[1..n_fields].iter().cloned().collect(),
-        );
+        value_table.insert(fields[0].clone(), fields[1..n_fields].to_vec());
         count += 1;
     }
 
@@ -90,20 +86,19 @@ pub fn table_command(options: &TableCommand) -> Result<()> {
     let reader = GffReader::from_reader(input_file);
 
     for mut annotation in reader {
-        let key_value;
         // check if the key is in the value_table
-        if options.prodigal_gene {
-            key_value = match annotation.get_attr("ID") {
+        let key_value = if options.prodigal_gene {
+            match annotation.get_attr("ID") {
                 None => String::new(),
                 Some(value) => format!("{}_{}", annotation.seq_id, value),
             }
         // gets the value from the attributes
         } else {
-            key_value = match annotation.get_attr(&key) {
+            match annotation.get_attr(&key) {
                 None => String::new(),
                 Some(value) => value,
-            };
-        }
+            }
+        };
         match value_table.get(&key_value) {
             Some(value_vec) => {
                 // start to add/change attributes
