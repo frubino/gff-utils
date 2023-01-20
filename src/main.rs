@@ -5,6 +5,7 @@ use anyhow::{Ok, Result};
 use clap::{CommandFactory, Parser}; // CommandFactory is necessary for Cli::command()
 use cli::add::add_command;
 use cli::fields::fields_command;
+use cli::remove::remove_command;
 use cli::*;
 use env_logger::Env;
 
@@ -24,6 +25,7 @@ fn main() -> Result<()> {
         let result = match command {
             cli::Commands::Add(options) => add_command(&options),
             cli::Commands::Fields(options) => fields_command(&options),
+            cli::Commands::Rm(options) => remove_command(&options),
             _ => todo!(),
         };
 

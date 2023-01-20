@@ -1,5 +1,6 @@
 pub mod add;
 pub mod fields;
+pub mod remove;
 
 use anyhow::{bail, Result};
 use clap::{Args, Command, Parser, Subcommand};
@@ -44,7 +45,7 @@ fn key_value_parser(arg: &str) -> Result<(String, String)> {
 #[derive(Debug, Args)]
 pub struct AddCommand {
     /// Attributes and value in the form attr:value
-    /// 
+    ///
     /// if the keys are duplicated, the value from the last one
     /// is used
     /// This can be passed multiple times, either by
@@ -57,7 +58,7 @@ pub struct AddCommand {
     #[arg(short, long)]
     overwrite: bool,
     /// Only changes annotations with uids contained in the file
-    /// 
+    ///
     /// One uid per line
     #[arg(short, long)]
     uid_file: Option<PathBuf>,
@@ -77,13 +78,23 @@ pub struct FieldsCommand {
     input_file: Option<PathBuf>,
 }
 
+/// Removes attributes from a GFF file
 #[derive(Debug, Args)]
 pub struct RmCommand {
-    #[arg(short, long, required = true)]
-    attribute: Vec<String>,
+    /// Attributes to remove
+    ///
+    /// Multiple attributes can be passed, by using the option multiple times
+    /// or separating them by `,` commas
+    #[arg(short, long, required = true, value_delimiter = ',')]
+    attributes: Vec<String>,
+    /// Use a file with UIDs to limit the removal to specific annotations
+    ///
+    /// The file needs to have a UID per line
     #[arg(short, long)]
     uid_file: Option<PathBuf>,
+    /// Input file, without value the stdin is used
     input_file: Option<PathBuf>,
+    /// Output file, without value the stdout is used
     output_file: Option<PathBuf>,
 }
 
