@@ -2,6 +2,7 @@ pub mod add;
 pub mod fields;
 pub mod remove;
 pub mod view;
+pub mod table;
 
 use anyhow::{bail, Result};
 use clap::{Args, Command, Parser, Subcommand};
@@ -33,6 +34,7 @@ pub enum Commands {
     Table(TableCommand),
     // Json(JsonCommand),
     // Import(ImportCommand),
+    // Filter(FilterCommand)
 }
 
 fn key_value_parser(arg: &str) -> Result<(String, String)> {
@@ -122,25 +124,50 @@ pub struct ViewCommand {
     output_file: Option<PathBuf>,
 }
 
+/// Adds attributes to a GFF using a file containing a table
+/// 
+/// The table needs to include the key to decide which annotations
+/// to modify as the first column, be tab separated and values
+/// to modify in each column must correspond to the order the
+/// `attributes` options are passed.
 #[derive(Debug, Args)]
 pub struct TableCommand {
+    /// Attribute in a GFF file to modify it
+    /// 
+    /// Corresponds to the first column in the table
     #[arg(short, long, default_value = "uid")]
     key: Option<String>,
+    /// Attributes, one per each column
+    /// 
+    /// Corresponds to column 2 onwards in the table
     #[arg(short, long, required = true)]
-    attribute: Vec<String>,
+    attributes: Vec<String>,
+    /// Only output the modified annotations
     #[arg(short, long)]
     only_edited: bool,
+    /// Skips lines starting with this character
+    /// 
+    /// By default, lines starting with `#` in the table are skipped
     #[arg(short, long, default_value = "#")]
     comment_char: String,
+    /// File with table of changes
+    /// 
+    /// TODO: a few more notes
     #[arg(short, long, required = true)]
     table_file: PathBuf,
+    /// Use a key compatible with Prodigal sequence files
+    /// 
+    /// The file must contain one column for the key and one for each
+    /// attribute to modify. Additional columns will be ignored
+    /// TODO: example
     #[arg(short, long)]
     prodigal_gene: bool,
+    /// Skips a number a lines from the table file
     #[arg(short, long, default_value_t = 0)]
     skip_rows: usize,
-    #[arg(short, long)]
-    default_value: Option<String>,
+    /// Input file, without value the stdin is used
     input_file: Option<PathBuf>,
+    /// Output file, without value the stdout is used
     output_file: Option<PathBuf>,
 }
 
