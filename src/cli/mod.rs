@@ -100,18 +100,18 @@ pub struct RmCommand {
 }
 
 /// Views a GFF as a table, using the fields requested
-/// 
+///
 /// The table is `tab` separated and the order of the columns
 /// is the same as the attributes requested.
 #[derive(Debug, Args)]
 pub struct ViewCommand {
     /// Prints header
-    /// 
+    ///
     /// Line starts with `#` and includes all attributes requested
     #[arg(short = 'e', long)]
     header: bool,
     /// Attributes to print
-    /// 
+    ///
     /// Multiple attributes can be passed, by using the option multiple times
     /// or separating them by commas `,`
     #[arg(short, long, required = true, value_delimiter = ',')]

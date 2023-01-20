@@ -6,8 +6,8 @@ use clap::{CommandFactory, Parser}; // CommandFactory is necessary for Cli::comm
 use cli::add::add_command;
 use cli::fields::fields_command;
 use cli::remove::remove_command;
-use cli::*;
 use cli::view::view_command;
+use cli::*;
 use env_logger::Env;
 
 fn main() -> Result<()> {
