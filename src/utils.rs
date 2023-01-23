@@ -30,6 +30,8 @@ pub fn file_or_stdout(output_file: &Option<PathBuf>) -> Result<Box<dyn Write>> {
 
 /// Checks passed Option<PathBuf> and returns an open file, if the Option is
 /// `None` in which case the `stdin` is used.
+/// 
+/// TODO: Add check for compressed files
 pub fn file_or_stdin(input_file: &Option<PathBuf>) -> Result<Box<dyn Read>> {
     let result = match input_file {
         None => {
