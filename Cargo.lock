@@ -181,6 +181,7 @@ dependencies = [
  "clap",
  "clap_complete",
  "env_logger",
+ "flate2",
  "itertools",
  "log",
 ]

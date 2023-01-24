@@ -30,27 +30,17 @@ pub fn file_or_stdout(output_file: &Option<PathBuf>) -> Result<Box<dyn Write>> {
 
 /// Checks passed Option<PathBuf> and returns an open file, if the Option is
 /// `None` in which case the `stdin` is used.
-/// 
-/// TODO: Add check for compressed files
 pub fn file_or_stdin(input_file: &Option<PathBuf>) -> Result<Box<dyn Read>> {
     let result = match input_file {
         None => {
             info!("Opening stdin");
             Box::new(std::io::stdin().lock()) as Box<dyn Read>
         }
-        Some(value) => match File::open(value) {
-            Err(err) => {
-                error!("Cannot read file {}", value.display());
-                bail!("{}", err.to_string())
-            }
-            Ok(handle) => {
-                info!("Opening file: {:?}", &input_file);
-                Box::new(handle)
-            }
-        },
+        Some(value) => bio_rascal::io::open_file_base(value)?,
     };
     Ok(result)
 }
+
 
 pub fn read_uid_file<P: AsRef<Path>>(uid_file: &Option<P>) -> Result<HashSet<String>> {
     // Makes the set for UIDs
