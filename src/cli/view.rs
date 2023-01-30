@@ -42,10 +42,19 @@ pub fn view_command(options: &ViewCommand) -> Result<()> {
                 "length" => annotation.length().to_string(),
                 _ => match annotation.attributes.get(attribute) {
                     Some(value) => value.clone(),
-                    None => "".into(),
+                    None => {
+                        if options.keep_empty {
+                            "".into()
+                        } else {
+                            continue;
+                        }
+                    },
                 },
             };
             values.push(value);
+        }
+        if (values.is_empty() || values.len() == 1) && !options.keep_empty {
+            continue;
         }
         writeln!(output_file, "{}", values.join("\t"))?;
     }

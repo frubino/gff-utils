@@ -112,6 +112,11 @@ pub struct ViewCommand {
     /// Line starts with `#` and includes all attributes requested
     #[arg(short = 'e', long)]
     header: bool,
+    /// The default is to remove from the output annotations where no attributes were found
+    /// 
+    /// This options allows to keep them instead.
+    #[arg(short, long)]
+    keep_empty: bool,
     /// Attributes to print
     ///
     /// Multiple attributes can be passed, by using the option multiple times
