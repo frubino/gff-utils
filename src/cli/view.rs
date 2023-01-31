@@ -20,8 +20,10 @@ pub fn view_command(options: &ViewCommand) -> Result<()> {
         writeln!(output_file, "#{}", options.attributes.iter().join("\t"))?;
     }
 
+    let mut count = 0;
     // Using a while loop, since None will be the end
     for annotation in reader {
+        count += 1;
         let mut values: Vec<String> = Vec::new();
 
         for attribute in &options.attributes {
@@ -58,6 +60,8 @@ pub fn view_command(options: &ViewCommand) -> Result<()> {
         }
         writeln!(output_file, "{}", values.join("\t"))?;
     }
+    
+    info!("Read {} annotations", count);
 
     Ok(())
 }
