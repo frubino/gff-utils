@@ -8,7 +8,7 @@ authors = ["Francesco Rubino"]
 
 [dependencies]
 anyhow = "1.0"
-bio_rascal = {path = "../bio-rascal"}
+bio_rascal = { version = "0.1", git = "https://git.kalpa.synology.me/Lavoro/bio-rascal.git", branch = "main" }
 clap = { version = "4.1", features = ["derive"] }
 clap_complete = "4.1"
 env_logger = "0.10"
