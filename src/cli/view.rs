@@ -55,7 +55,7 @@ pub fn view_command(options: &ViewCommand) -> Result<()> {
             };
             values.push(value);
         }
-        if values.is_empty() && !options.keep_empty {
+        if values.len() < options.attributes.len() && !options.keep_empty {
             continue;
         }
         writeln!(output_file, "{}", values.join("\t"))?;
