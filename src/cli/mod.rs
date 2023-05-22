@@ -32,6 +32,7 @@ pub enum Commands {
     Rm(RmCommand),
     View(ViewCommand),
     Table(TableCommand),
+    Gtf(GtfCommand),
     // Json(JsonCommand),
     // Import(ImportCommand),
     // Filter(FilterCommand)
@@ -174,6 +175,12 @@ pub struct TableCommand {
     input_file: Option<PathBuf>,
     /// Output file, without value the stdout is used
     output_file: Option<PathBuf>,
+}
+
+#[derive(Args, Debug)]
+pub struct GtfCommand {
+    pub input_file: Option<PathBuf>,
+    pub output_file: Option<PathBuf>,
 }
 
 /// Generates the completion for the specified shell

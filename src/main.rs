@@ -1,5 +1,6 @@
 mod cli;
 mod utils;
+mod gtf;
 
 use anyhow::{Ok, Result};
 use clap::{CommandFactory, Parser}; // CommandFactory is necessary for Cli::command()
@@ -30,6 +31,7 @@ fn main() -> Result<()> {
             cli::Commands::Rm(options) => remove_command(&options),
             cli::Commands::View(options) => view_command(&options),
             cli::Commands::Table(options) => table_command(&options),
+            cli::Commands::Gtf(options) => gtf::gtf_command(options),
             //_ => todo!(),
         };
 
