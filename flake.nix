@@ -1,5 +1,5 @@
 {
-  description = "gff-utils build with musl for x86_64 mainly for work on remote systems";
+  description = "gff-utils flake, defaults to dynamically linked. Build with .#gff-utils-musl for statically linked.";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
@@ -16,41 +16,91 @@
 
   outputs =
     {
+      self,
       nixpkgs,
       crane,
       flake-utils,
       rust-overlay,
       ...
     }:
-    flake-utils.lib.eachSystem [ "x86_64-linux" ] (
+    flake-utils.lib.eachDefaultSystem (
       system:
       let
-        pkgs = import nixpkgs {
+        pkgs = nixpkgs.legacyPackages.${system};
+
+        craneLib = crane.mkLib pkgs;
+
+        # add the rust overlay to use musl
+        pkgs-musl = import nixpkgs {
           inherit system;
           overlays = [ (import rust-overlay) ];
         };
 
-        craneLib = (crane.mkLib pkgs).overrideToolchain (
+        craneLib-musl = (crane.mkLib pkgs-musl).overrideToolchain (
           p:
           p.rust-bin.stable.latest.default.override {
             targets = [ "x86_64-unknown-linux-musl" ];
           }
         );
-
-        gff-utils = craneLib.buildPackage {
-          src = craneLib.cleanCargoSource ./.;
+        gff-utils-musl = craneLib-musl.buildPackage {
+          src = craneLib-musl.cleanCargoSource ./.;
           strictDeps = true;
 
           CARGO_BUILD_TARGET = "x86_64-unknown-linux-musl";
           CARGO_BUILD_RUSTFLAGS = "-C target-feature=+crt-static";
         };
+
+        # Common arguments can be set here to avoid repeating them later
+        # Note: changes here will rebuild all dependency crates
+        commonArgs = {
+          src = craneLib.cleanCargoSource ./.;
+          strictDeps = true;
+
+          buildInputs =
+            [
+              # Add additional build inputs here
+            ]
+            ++ pkgs.lib.optionals pkgs.stdenv.isDarwin [
+              # Additional darwin specific inputs can be set here
+              pkgs.libiconv
+            ];
+        };
+
+        gff-utils = craneLib.buildPackage (
+          commonArgs
+          // {
+            cargoArtifacts = craneLib.buildDepsOnly commonArgs;
+
+            # Additional environment variables or build phases/hooks can be set
+            # here *without* rebuilding all dependency crates
+            # MY_CUSTOM_VAR = "some value";
+          }
+        );
       in
       {
         checks = {
-          inherit gff-utils;
+          inherit gff-utils gff-utils-musl;
         };
 
         packages.default = gff-utils;
+        packages.gff-utils-musl = gff-utils-musl;
+
+        apps.default = flake-utils.lib.mkApp {
+          drv = gff-utils;
+        };
+
+        devShells.default = craneLib.devShell {
+          # Inherit inputs from checks.
+          checks = self.checks.${system};
+
+          # Additional dev-shell environment variables can be set directly
+          # MY_CUSTOM_DEVELOPMENT_VAR = "something else";
+
+          # Extra inputs can be added here; cargo and rustc are provided by default.
+          packages = [
+            pkgs.rust-analyzer
+          ];
+        };
       }
     );
 }
